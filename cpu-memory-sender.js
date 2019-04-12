@@ -5,6 +5,11 @@ const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
 
+if (process.argv.length < 3) {
+    console.error("No connectionString provided!");
+    return;
+}
+
 const connectionString = process.argv[2];
 
 const client = DeviceClient.fromConnectionString(connectionString, Mqtt);
