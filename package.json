@@ -1,0 +1,14 @@
+{
+  "name": "cpu-memory-to-azure-iot-sender",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cpu-memory-sender.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-os-utils": "^1.0.7"
+  }
+}
