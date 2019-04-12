@@ -1,12 +1,107 @@
 const osu = require("node-os-utils");
 const cpu = osu.cpu;
+const chalk = require("chalk");
+const Mqtt = require("azure-iot-device-mqtt").Mqtt;
+const DeviceClient = require("azure-iot-device").Client;
+const Message = require("azure-iot-device").Message;
 
-cpu.usage().then(cpuPercentage => {
-  console.log(cpuPercentage); // 10.38
+const connectionString = process.argv[2];
+
+const client = DeviceClient.fromConnectionString(connectionString, Mqtt);
+
+let twin = null;
+let reportedPropertiesPatch = {
+    sendInterval: 0,
+    send_cpuWorkload: false,
+    send_temperature: false
+};
+
+client.getTwin((err, receivedTwin) => {
+    if (err) {
+        console.log("Failed to get deviceTwin");
+        return;
+    }
+
+    twin = receivedTwin;
+
+    console.log("Got device twin", twin);
+
+    twin.on("properties.desired.sendInterval", prop => {
+        console.log("Desired sendInterval", prop);
+        const sendInterval = prop.value * 1000;
+        reportedPropertiesPatch.sendInterval = sendInterval;
+        sendReportedProperties();
+        startSendingData();
+    });
+
+    twin.on("properties.desired.send_cpuWorkload", prop => {
+        console.log("Desired send_cpuWorkload", prop);
+        reportedPropertiesPatch.send_cpuWorkload = prop.value;
+        sendReportedProperties();
+    });
+
+    twin.on("properties.desired.send_temperature", prop => {
+        console.log("Desired send_temperature", prop);
+        reportedPropertiesPatch.send_temperature = prop.value;
+        sendReportedProperties();
+    });
 });
 
-const osCmd = osu.osCmd;
+let sendIntervalId = null;
+function startSendingData() {
+    const sendInterval = reportedPropertiesPatch.sendInterval;
+    stopSendingData();
+    sendIntervalId = setInterval(() => {
+        sendCombinedMessage();
+    }, sendInterval);
+    console.log(
+        "Started sending data all " + sendInterval / 1000 + " seconds."
+    );
+}
 
-osCmd.whoami().then(userName => {
-  console.log(userName); // admin
-});
+function stopSendingData() {
+    if (sendIntervalId !== null) {
+        clearInterval(sendIntervalId);
+        console.log("Stopped sending data");
+    }
+}
+
+async function sendCombinedMessage() {
+    const sendCpu = reportedPropertiesPatch.send_cpuWorkload;
+    const sendTemperature = reportedPropertiesPatch.send_temperature;
+
+    let sendObject = {};
+
+    if (sendCpu) {
+        sendObject = {};
+        const cpuPercentage = await cpu.usage();
+        sendObject.cpu = cpuPercentage;
+    }
+
+    if (sendTemperature) {
+        const temperature = 20 + Math.random() * 15;
+        sendObject.avg = temperature;
+    }
+
+    if (Object.keys(sendObject).length > 0) {
+        const message = new Message(JSON.stringify(sendObject));
+        console.log("Sending combinded Message: " + message.getData());
+        client.sendEvent(message, error => {
+            if (error) {
+                console.error("send error: " + err.toString());
+            } else {
+                console.log("CombinedObject sent");
+            }
+        });
+    } else {
+        console.log("Nothing to send!");
+    }
+}
+
+function sendReportedProperties() {
+    twin.properties.reported.update(reportedPropertiesPatch, function(err) {
+        if (err) throw err;
+        console.log(chalk.blue("Twin state reported"));
+        // console.log(JSON.stringify(reportedPropertiesPatch, null, 2));
+    });
+}
