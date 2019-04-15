@@ -4,8 +4,11 @@ const chalk = require("chalk");
 const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
-const blinkLed5Seconds = require("./blink").blinkLed5Seconds;
+const blink = require("./blink");
 
+console.log(blink);
+
+/*
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
     return;
@@ -103,7 +106,6 @@ function listenToSendInterval() {
         const sendInterval = prop.value * 1000;
         reportedPropertiesPatch.sendInterval = sendInterval;
         sendUpdate("sendInterval", prop.value);
-        //sendReportedProperties();
         startSendingData();
     });
 }
@@ -114,7 +116,6 @@ function listenToCpuWorkload() {
         console.log("Desired send_cpuWorkload", prop);
         reportedPropertiesPatch.send_cpuWorkload = prop.value;
         sendUpdate("send_cpuWorkload", prop.value);
-        // sendReportedProperties();
     });
 }
 
@@ -124,7 +125,6 @@ function listenToSendTemperature() {
         console.log("Desired send_temperature", prop);
         reportedPropertiesPatch.send_temperature = prop.value;
         sendUpdate("send_temperature", prop.value);
-        // sendReportedProperties();
     });
 }
 
@@ -134,7 +134,7 @@ function sendUpdate(propertyName, propertyValue) {
     };
 
     console.log("SendUpdate", patch);
-    /*
+    
     twin.properties.reported.update(patch, err => {
         if (err) {
             console.error("Failed to update " + propertyName, err);
@@ -148,5 +148,5 @@ function sendUpdate(propertyName, propertyValue) {
             );
         }
     });
-    */
 }
+*/
