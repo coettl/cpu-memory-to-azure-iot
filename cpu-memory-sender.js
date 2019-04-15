@@ -8,6 +8,8 @@ const blink = require("./blink");
 
 console.log(blink);
 
+blink.blinkLed5Seconds();
+
 /*
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
