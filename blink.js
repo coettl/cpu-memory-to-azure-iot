@@ -5,6 +5,14 @@ const LED = new Gpio(4, "out"); //use GPIO pin 4, and specify that it is output
 let blinkIntervalId = null;
 let blinkInProgress = false;
 
+function blinkLed(seconds, interval) {
+    if (!blinkInProgress) {
+        blinkInProgress = true;
+        blinkIntervalId = setInterval(blinkLED, interval); //run the blinkLED function every 250ms
+        setTimeout(endBlink, seconds * 1000); //stop blinking after 5 seconds
+    }
+}
+
 function blinkLed5Seconds() {
     if (!blinkInProgress) {
         blinkInProgress = true;

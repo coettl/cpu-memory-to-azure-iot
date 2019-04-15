@@ -1,4 +1,5 @@
-const { blinkLed5Seconds } = require("./blink");
+const chalk = require("chalk");
+const { blinkLed } = require("./blink");
 
 function onBlink(request, response) {
     // Function to send a direct method reponse to your IoT hub.
@@ -23,7 +24,8 @@ function onBlink(request, response) {
 
     console.log(chalk.green("Direct method payload received:"));
     console.log(chalk.green(request.payload));
-    blinkLed5Seconds();
+    console.log(request.payload);
+    blinkLed(5, 250);
     response.send(200, "Successfully blinked!", directMethodResponse);
 }
 
