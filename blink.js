@@ -30,5 +30,5 @@ function endBlink() {
     blinkInProgress = false;
 }
 
-module.exports = { blinkLed5Seconds };
+// module.exports = { blinkLed5Seconds };
 // exports.blinkLed5Seconds = blinkLed5Seconds;
