@@ -16,8 +16,11 @@ function blinkLed5Seconds() {
 function switchOnLed(seconds) {
     if (!blinkInProgress) {
         blinkInProgress = true;
-        LED.writeSync(1)
-        setTimeout(() =>{ LED.writeSync(0); blinkInProgress = false}), seconds * 1000);
+        LED.writeSync(1);
+        setTimeout(() => {
+            LED.writeSync(0);
+            blinkInProgress = false;
+        }, seconds * 1000);
     }
 }
 
