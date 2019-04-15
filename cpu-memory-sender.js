@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
-const { switchLedOn, blinkLed5Seconds } = require("./blink").blinkLed5Seconds;
+const { switchLedOn, blinkLed5Seconds } = require("./blink");
 
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
