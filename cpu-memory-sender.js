@@ -5,6 +5,7 @@ const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
 const { switchLedOn, blinkLed5Seconds } = require("./blink");
+const { registerOnBlink } = require("./azure-iot-register-on-blink");
 
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
@@ -37,33 +38,7 @@ client.getTwin((err, receivedTwin) => {
     listenToSendTemperature();
 });
 
-function onBlink(request, response) {
-    // Function to send a direct method reponse to your IoT hub.
-    function directMethodResponse(err) {
-        if (err) {
-            console.error(
-                chalk.red(
-                    "An error ocurred when sending a method response:\n" +
-                        err.toString()
-                )
-            );
-        } else {
-            console.log(
-                chalk.green(
-                    "Response to method '" +
-                        request.methodName +
-                        "' sent successfully."
-                )
-            );
-        }
-    }
-
-    console.log(chalk.green("Direct method payload received:"));
-    console.log(chalk.green(request.payload));
-    blinkLed5Seconds();
-    response.send(200, "Successfully blinked!", directMethodResponse);
-}
-client.onDeviceMethod("blink", onBlink);
+registerOnBlink(client);
 
 let sendIntervalId = null;
 function startSendingData() {
