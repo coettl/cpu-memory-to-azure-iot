@@ -22,10 +22,11 @@ function onBlink(request, response) {
         }
     }
 
-    console.log(chalk.green("Direct method payload received:"));
-    console.log(chalk.green(request.payload));
-    console.log(request.payload);
-    blinkLed(5, 250);
+    console.log(chalk.green("blink method received"));
+
+    const { blinkTimeInSeconds, blinkIntervalInMs } = request.payload;
+    blinkLed(blinkTimeInSeconds, blinkIntervalInMs);
+
     response.send(200, "Successfully blinked!", directMethodResponse);
 }
 
