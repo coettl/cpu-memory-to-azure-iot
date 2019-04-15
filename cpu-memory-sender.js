@@ -88,18 +88,11 @@ async function sendCombinedMessage() {
     }
 }
 
-function sendReportedProperties() {
-    twin.properties.reported.update(reportedPropertiesPatch, function(err) {
-        if (err) throw err;
-        console.log(chalk.blue("Twin state reported"));
-        console.log(JSON.stringify(reportedPropertiesPatch, null, 2));
-    });
-}
-
 function listenToSendInterval() {
-    blinkLed5Seconds();
     twin.on("properties.desired.sendInterval", prop => {
         console.log("Desired sendInterval", prop);
+        blinkLed5Seconds();
+
         const sendInterval = prop.value * 1000;
         reportedPropertiesPatch.sendInterval = sendInterval;
         sendUpdate("sendInterval", prop.value);
@@ -108,18 +101,20 @@ function listenToSendInterval() {
 }
 
 function listenToCpuWorkload() {
-    blinkLed5Seconds();
     twin.on("properties.desired.send_cpuWorkload", prop => {
         console.log("Desired send_cpuWorkload", prop);
+        blinkLed5Seconds();
+
         reportedPropertiesPatch.send_cpuWorkload = prop.value;
         sendUpdate("send_cpuWorkload", prop.value);
     });
 }
 
 function listenToSendTemperature() {
-    blinkLed5Seconds();
     twin.on("properties.desired.send_temperature", prop => {
         console.log("Desired send_temperature", prop);
+        blinkLed5Seconds();
+
         reportedPropertiesPatch.send_temperature = prop.value;
         sendUpdate("send_temperature", prop.value);
     });
