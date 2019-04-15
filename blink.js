@@ -52,4 +52,4 @@ process.on("SIGINT", () => {
     LED.unexport();
 });
 
-module.exports = { blinkLed5Seconds, switchLedOn };
+module.exports = { blinkLed, blinkLed5Seconds, switchLedOn };
