@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
-const { switchOnLed, blinkLed5Seconds } = require("./blink").blinkLed5Seconds;
+const { switchLedOn, blinkLed5Seconds } = require("./blink").blinkLed5Seconds;
 
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
@@ -91,7 +91,7 @@ async function sendCombinedMessage() {
 function listenToSendInterval() {
     twin.on("properties.desired.sendInterval", prop => {
         console.log("Desired sendInterval", prop);
-        switchOnLed(3);
+        switchLedOn(3);
 
         const sendInterval = prop.value * 1000;
         reportedPropertiesPatch.sendInterval = sendInterval;
@@ -103,7 +103,7 @@ function listenToSendInterval() {
 function listenToCpuWorkload() {
     twin.on("properties.desired.send_cpuWorkload", prop => {
         console.log("Desired send_cpuWorkload", prop);
-        switchOnLed(3);
+        switchLedOn(3);
 
         reportedPropertiesPatch.send_cpuWorkload = prop.value;
         sendUpdate("send_cpuWorkload", prop.value);
@@ -113,7 +113,7 @@ function listenToCpuWorkload() {
 function listenToSendTemperature() {
     twin.on("properties.desired.send_temperature", prop => {
         console.log("Desired send_temperature", prop);
-        switchOnLed(3);
+        switchLedOn(3);
 
         reportedPropertiesPatch.send_temperature = prop.value;
         sendUpdate("send_temperature", prop.value);

@@ -13,7 +13,7 @@ function blinkLed5Seconds() {
     }
 }
 
-function switchOnLed(seconds) {
+function switchLedOn(seconds) {
     if (!blinkInProgress) {
         blinkInProgress = true;
         LED.writeSync(1);
@@ -44,4 +44,4 @@ process.on("SIGINT", () => {
     LED.unexport();
 });
 
-module.exports = { blinkLed5Seconds, switchOnLed };
+module.exports = { blinkLed5Seconds, switchLedOn };
