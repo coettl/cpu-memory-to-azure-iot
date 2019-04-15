@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
-// const blink = require("./blink");
+const blinkLed5Seconds = require("./blink").blinkLed5Seconds;
 
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
@@ -142,6 +142,7 @@ function sendUpdate(propertyName, propertyValue) {
     });
 }
 
+/*
 const Gpio = require("onoff").Gpio; //include onoff to interact with the GPIO
 const LED = new Gpio(4, "out"); //use GPIO pin 4, and specify that it is output
 
@@ -169,7 +170,6 @@ function blinkLED() {
 function endBlink() {
     clearInterval(blinkIntervalId); // Stop blink intervals
     LED.writeSync(0); // Turn LED off
-    LED.unexport(); // Unexport GPIO to free resources
     blinkInProgress = false;
 }
 
@@ -177,3 +177,4 @@ process.on("SIGINT", () => {
     led.unexport();
     button.unexport();
 });
+*/

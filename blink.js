@@ -26,9 +26,13 @@ function blinkLED() {
 function endBlink() {
     clearInterval(blinkIntervalId); // Stop blink intervals
     LED.writeSync(0); // Turn LED off
-    LED.unexport(); // Unexport GPIO to free resources
     blinkInProgress = false;
 }
 
-// module.exports = { blinkLed5Seconds };
+process.on("SIGINT", () => {
+    led.unexport();
+    button.unexport();
+});
+
+module.exports = { blinkLed5Seconds };
 // exports.blinkLed5Seconds = blinkLed5Seconds;
