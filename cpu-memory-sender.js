@@ -172,3 +172,8 @@ function endBlink() {
     LED.unexport(); // Unexport GPIO to free resources
     blinkInProgress = false;
 }
+
+process.on("SIGINT", () => {
+    led.unexport();
+    button.unexport();
+});
