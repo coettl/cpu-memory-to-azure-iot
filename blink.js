@@ -1,7 +1,12 @@
 const Gpio = require("onoff").Gpio; //include onoff to interact with the GPIO
 
 const LED = new Gpio(4, "out"); //use GPIO pin 4, and specify that it is output
-const blinkInterval = setInterval(blinkLED, 250); //run the blinkLED function every 250ms
+
+let blinkIntervalId = null;
+export function blinkLed5Seconds() {
+    blinkIntervalId = setInterval(blinkLED, 250); //run the blinkLED function every 250ms
+    setTimeout(endBlink, 5000); //stop blinking after 5 seconds
+}
 
 function blinkLED() {
     //function to start blinking
@@ -15,9 +20,7 @@ function blinkLED() {
 
 function endBlink() {
     //function to stop blinking
-    clearInterval(blinkInterval); // Stop blink intervals
+    clearInterval(blinkIntervalId); // Stop blink intervals
     LED.writeSync(0); // Turn LED off
     LED.unexport(); // Unexport GPIO to free resources
 }
-
-setTimeout(endBlink, 5000); //stop blinking after 5 seconds
