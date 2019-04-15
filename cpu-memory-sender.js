@@ -4,7 +4,7 @@ const chalk = require("chalk");
 const Mqtt = require("azure-iot-device-mqtt").Mqtt;
 const DeviceClient = require("azure-iot-device").Client;
 const Message = require("azure-iot-device").Message;
-const blinkLed5Seconds = require("./blink").blinkLed5Seconds;
+const { switchOnLed, blinkLed5Seconds } = require("./blink").blinkLed5Seconds;
 
 if (process.argv.length < 3) {
     console.error("No connectionString provided!");
@@ -91,7 +91,7 @@ async function sendCombinedMessage() {
 function listenToSendInterval() {
     twin.on("properties.desired.sendInterval", prop => {
         console.log("Desired sendInterval", prop);
-        blinkLed5Seconds();
+        switchOnLed(3);
 
         const sendInterval = prop.value * 1000;
         reportedPropertiesPatch.sendInterval = sendInterval;
@@ -103,7 +103,7 @@ function listenToSendInterval() {
 function listenToCpuWorkload() {
     twin.on("properties.desired.send_cpuWorkload", prop => {
         console.log("Desired send_cpuWorkload", prop);
-        blinkLed5Seconds();
+        switchOnLed(3);
 
         reportedPropertiesPatch.send_cpuWorkload = prop.value;
         sendUpdate("send_cpuWorkload", prop.value);
@@ -113,7 +113,7 @@ function listenToCpuWorkload() {
 function listenToSendTemperature() {
     twin.on("properties.desired.send_temperature", prop => {
         console.log("Desired send_temperature", prop);
-        blinkLed5Seconds();
+        switchOnLed(3);
 
         reportedPropertiesPatch.send_temperature = prop.value;
         sendUpdate("send_temperature", prop.value);
@@ -141,40 +141,3 @@ function sendUpdate(propertyName, propertyValue) {
         }
     });
 }
-
-/*
-const Gpio = require("onoff").Gpio; //include onoff to interact with the GPIO
-const LED = new Gpio(4, "out"); //use GPIO pin 4, and specify that it is output
-
-let blinkIntervalId = null;
-let blinkInProgress = false;
-
-function blinkLed5Seconds() {
-    if (!blinkInProgress) {
-        blinkInProgress = true;
-        blinkIntervalId = setInterval(blinkLED, 250); //run the blinkLED function every 250ms
-        setTimeout(endBlink, 5000); //stop blinking after 5 seconds
-    }
-}
-
-function blinkLED() {
-    //function to start blinking
-    if (LED.readSync() === 0) {
-        //check the pin state, if the state is 0 (or off)
-        LED.writeSync(1); //set pin state to 1 (turn LED on)
-    } else {
-        LED.writeSync(0); //set pin state to 0 (turn LED off)
-    }
-}
-
-function endBlink() {
-    clearInterval(blinkIntervalId); // Stop blink intervals
-    LED.writeSync(0); // Turn LED off
-    blinkInProgress = false;
-}
-
-process.on("SIGINT", () => {
-    led.unexport();
-    button.unexport();
-});
-*/

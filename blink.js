@@ -13,6 +13,14 @@ function blinkLed5Seconds() {
     }
 }
 
+function switchOnLed(seconds) {
+    if (!blinkInProgress) {
+        blinkInProgress = true;
+        LED.writeSync(1)
+        setTimeout(() =>{ LED.writeSync(0); blinkInProgress = false}), seconds * 1000);
+    }
+}
+
 function blinkLED() {
     //function to start blinking
     if (LED.readSync() === 0) {
@@ -30,9 +38,7 @@ function endBlink() {
 }
 
 process.on("SIGINT", () => {
-    led.unexport();
-    button.unexport();
+    LED.unexport();
 });
 
-module.exports = { blinkLed5Seconds };
-// exports.blinkLed5Seconds = blinkLed5Seconds;
+module.exports = { blinkLed5Seconds, switchOnLed };
